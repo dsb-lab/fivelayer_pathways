@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="#"> <!-- fixes some console.log error -->
+
+  <link rel="stylesheet" href="css/normalize.css" />
+  <link rel="stylesheet" href="css/skeleton.css" />
+  <link rel="stylesheet" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/open-sans.css" />
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/tooltipster.bundle.min.css" />
+
+  <script src="js/cytoscape.min.js"></script>
+  <script src="js/cola.js"></script>
+  <script src="js/cytoscape-cola.js"></script>
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <script src="js/tooltipster.bundle.min.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/cytoscape-svg.js"></script>
+  <script src="js/FileSaver.js"></script>
+
+  <script>
+    var saveAsSvg = function(filename) {
+        var svgContent = cy.svg({scale: 0.15, full: true, bg: 'white',display:'block'});
+        var blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
+        saveAs(blob, "demo.svg");
+      };
+    var getSvgUrl = function() {
+        var svgContent = cy.svg({scale: 0.15, full: true, bg: 'white',display:'block'});
+        var blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
+        var url = URL.createObjectURL(blob);
+        return url;
+      };
+  </script>
+
+  <title>Network Pathways</title>
+</head>
+
+<body>
+
+  <div id="cy" class="main">
+    <h>Network Pathways 6</h>
+    <button style="color: white; background-color: #008CBA; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="saveAsSvg()">Save as SVG</button>
+    <button style="color: white; background-color: #ff0000; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="window.location=getSvgUrl()">View SVG</button>
+  </div>
+
+  <div class="tools">
+    <h2>Data</h2>
+
+    <p>The <a target="_blank" href="http://js.cytoscape.org/#notation/elements-json">data</a> specifies what should be put in
+      the graph. Select between one of the example data sets or specify your own custom data in the code.</p>
+
+    <label for="data" class="tooltip u-pull-left" title="Switch to a new dataset">Active dataset</label>
+    <div class="u-cf"></div>
+    <select class id="data">
+        <option value="pathways_msgbclin_pats.json">MSGB to Clinical: All MS Patients</option>
+        <option value="pathways_phosclin_pats.json">Proteomics to Clinical: All MS Patients</option>
+        <option value="pathways_cytoclin_pats.json">Cytomics to Clinical: All MS Patients</option>
+        <option value="pathways_genova.json">Validation Network</option>
+        <option value="pathways_overlap_pats.json">Overlap Network: Patients</option>
+        <option value="pathways_msgbclin_mild.json">MSGB to Clinical: Mild MS Patients</option>
+        <option value="pathways_phosclin_mild.json">Proteomics to Clinical: Mild MS Patients</option>
+        <option value="pathways_cytoclin_mild.json">Cytomics to Clinical: Mild MS Patients</option>
+        <option value="pathways_msgbclin_severe.json">MSGB to Clinical: Severe MS Patients</option>
+        <option value="pathways_phosclin_severe.json">Proteomics to Clinical: Severe MS Patients</option>
+        <option value="pathways_cytoclin_severe.json">Cytomics to Clinical: Severe MS Patients</option>
+        <option value="pathways_msgbclin_pms.json">MSGB to Clinical: Progressive MS</option>
+        <option value="pathways_phosclin_pms.json">Proteomics to Clinical: Progressive MS</option>
+        <option value="pathways_cytoclin_pms.json">Cytomics to Clinical: Progressive MS</option>
+        <option value="pathways_msgbclin_rms.json">MSGB to Clinical: Relapse-Remitting MS</option>
+        <option value="pathways_phosclin_rms.json">Proteomics to Clinical: Relapse-Remitting MS</option>
+        <option value="pathways_cytoclin_rms.json">Cytomics to Clinical: Relapse-Remitting MS</option>
+        <option value="pathways_msgbclin_notreat.json">MSGB to Clinical: Untreated</option>
+        <option value="pathways_phosclin_notreat.json">Proteomics to Clinical: Untreated</option>
+        <option value="pathways_cytoclin_notreat.json">Cytomics to Clinical: Untreated</option>
+        <option value="pathways_msgbclin_first.json">MSGB to Clinical: Low-Efficacy Treatment</option>
+        <option value="pathways_phosclin_first.json">Proteomics to Clinical: Low-Efficacy Treatment</option>
+        <option value="pathways_cytoclin_first.json">Cytomics to Clinical: Low-Efficacy Treatment</option>
+        <option value="pathways_msgbclin_second.json">MSGB to Clinical: High-Efficacy Treatment</option>
+        <option value="pathways_phosclin_second.json">Proteomics to Clinical: High-Efficacy Treatment</option>
+        <option value="pathways_cytoclin_second.json">Cytomics to Clinical: High-Efficacy Treatment</option>
+      </select>
+      <p></p>
+
+    <label for="style" class="tooltip u-pull-left" title="Switch to a new graph stylesheet">Active stylesheet</label>
+    <div class="u-cf"></div>
+    <select id="style">
+        <option value="custom.json" selected>Custom</option>
+      </select>
+    <p></p>
+
+
+    <label for="layout" class="tooltip u-pull-left" title="Change layout">Active layout</label>
+    <div class="u-cf"></div>
+    <select id="layout">
+        <option value="custom" selected>Custom</option>
+      </select>
+    <i id="redo-layout" class="fa fa-refresh action-icon tooltip" title="Redo layout"></i>
+    <p></p>
+
+    <label for="algorithm" class="tooltip u-pull-left" title="Run algorithm. Try running A* a few times to see distances to different nodes">
+        Run algorithm
+      </label>
+    <div class="u-cf"></div>
+    <select id="algorithm">
+        <option value="none" selected>None</option>
+      </select>
+    <i id="redo-algorithm" class="fa fa-refresh action-icon tooltip" title="Redo algorithm visualization"></i>
+  </div>
+  <p></p>
+
+  <div class="footer-link">
+    <a target="_blank" href="http://js.cytoscape.org">js.cytoscape.org</a>
+  </div>
+
+</body>
+
+</html>

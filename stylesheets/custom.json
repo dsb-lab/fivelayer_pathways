@@ -1,0 +1,33 @@
+[
+    {
+        "selector": "node",
+        "style": {
+            "shape": "data(shape)",
+            "height": "data(height)",
+            "width": "data(width)",
+            "background-fill": "linear-gradient","background-gradient-stop-colors": "data(node_grad)",
+            "background-gradient-stop-positions": "0 50 100",
+            "background-color": "data(node_color)",
+            "label": "data(name)",
+            "color": "data(font_color)",
+            "font-size": "data(font_size)",
+            "text-halign": "center",
+            "text-valign": "center",
+            "border-color": "black",
+            "border-width": "1",
+            "text-wrap":"wrap"
+        }
+    },
+    {
+    	"selector": "edge",
+    	"style": {
+    		"line-color": "black",
+    		"width": "data(edge_thick)",
+    		"opacity": "data(edge_trans)",
+    		"curve-style": "unbundled-bezier",
+    		"control-point-weight": "data(cont_weight)",
+    		"edge-distances": "intersection",
+    		"control-point-distances": "data(cont_dist)"
+    	}
+    }
+]
