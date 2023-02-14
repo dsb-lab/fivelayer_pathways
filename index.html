@@ -42,7 +42,7 @@
 <body>
 
   <div id="cy" class="main">
-    <h>Network Pathways</h>
+    <h>Network Pathways 6</h>
     <button style="color: white; background-color: #008CBA; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="saveAsSvg()">Save as SVG</button>
     <button style="color: white; background-color: #ff0000; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="window.location=getSvgUrl()">View SVG</button>
   </div>
@@ -50,8 +50,9 @@
   <div class="tools">
     <h2>Data</h2>
 
-    <p>The <a target="_blank" href="http://js.cytoscape.org/#notation/elements-json">data</a> specifies what should be put in
-      the graph. Select between one of the example data sets or specify your own custom data in the code.</p>
+    <p>Choose which subset to display. Each option shows the top pathways for that subset. 
+      For MS patients, the Overlap Network shows the edges that were present in both the 
+      single-cell data network and any of the paths targeting the clinical phenotype.</p>
 
     <label for="data" class="tooltip u-pull-left" title="Switch to a new dataset">Active dataset</label>
     <div class="u-cf"></div>
