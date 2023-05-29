@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/tooltipster.bundle.min.css" />
 
+  <script src="js/pathways.js"></script>
   <script src="js/cytoscape.min.js"></script>
   <script src="js/cola.js"></script>
   <script src="js/cytoscape-cola.js"></script>
@@ -21,6 +22,7 @@
   <script src="js/index.js"></script>
   <script src="js/cytoscape-svg.js"></script>
   <script src="js/FileSaver.js"></script>
+  <!-- <script src="js/file_system.js"></script> -->
 
   <script>
     var saveAsSvg = function(filename) {
@@ -28,11 +30,17 @@
         var blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
         saveAs(blob, "demo.svg");
       };
+
     var getSvgUrl = function() {
         var svgContent = cy.svg({scale: 0.15, full: true, bg: 'white',display:'block'});
         var blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
         var url = URL.createObjectURL(blob);
         return url;
+      };
+
+    var changeThing = function(divID, text) {
+        var pathTool = document.getElementById(divID);
+        pathTool.innerHTML = text;
       };
   </script>
 
@@ -42,21 +50,47 @@
 <body>
 
   <div id="cy" class="main">
-    <h>Network Pathways</h>
+    <h><a target="_blank" href="http://js.cytoscape.org">cytoscape.js</a> <br>
+      <a target="_blank" href="https://github.com/kinimesi/cytoscape-svg">cytoscape-svg</a> <br></h>
     <button style="color: white; background-color: #008CBA; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="saveAsSvg()">Save as SVG</button>
     <button style="color: white; background-color: #ff0000; width: 100px; height: 30px; text-align: center; padding: 0px; line-height: 0.5;" onclick="window.location=getSvgUrl()">View SVG</button>
+    <div id="networkInfo" class="box" style="position:fixed; right:27%; top:2%;
+      padding-top:2px; padding-left:2px; height:100px; width:200px; 
+      font-size:15px; line-height:1.2; background-color:lightgrey;">
+      <p>Hello there</p>
+    </div>
   </div>
 
-  <div class="tools">
-    <h2>Data</h2>
+  <div id="toolbar" class="tools">
 
-    <p>Choose which subset to display. Each option shows the top pathways for that subset. 
-      For MS patients, the Overlap Network shows the edges that were present in both the 
-      single-cell data network and any of the paths targeting the clinical phenotype.</p>
-
-    <label for="data" class="tooltip u-pull-left" title="Switch to a new dataset">Active dataset</label>
+    <label for="sourceShow" class="tooltip u-pull-left" style="position:absolute; left:2%; top:4%;" title="Choose the source node">Active Source</label>
     <div class="u-cf"></div>
-    <select class id="data">
+    <select class id="sourceShow" style="position:absolute; left:40%; top:2%;">
+        <option value="Source">Source</option>
+    </select>
+
+    <label for="targetShow" class="tooltip u-pull-left" style="position:absolute; left:2%; top:16%;" title="Choose the target node">Active Target</label>
+    <div class="u-cf"></div>
+    <select class id="targetShow" style="position:absolute; left:40%; top:14%;">
+        <option value="Target">Target</option>
+    </select>
+
+    <label for="pathShow" class="tooltip u-pull-left" style="position:absolute; left:2%; top:28%;" title="Choose which pathway to show">Active Pathway</label>
+    <div class="u-cf"></div>
+    <select class id="pathShow" style="position:absolute; left:2%; top:36%;">
+        <option value="0">Pathways</option>
+        <option value="1">Mooooore</option>
+    </select>
+
+<!--     <div style="position:absolute; top:56%; vertical-align:top; transform: translate(0, 50%);">
+        <p>Choose which subset to display. Each option shows the top pathways for that subset. 
+          For MS patients, the Overlap Network shows the edges that were present in both the 
+          single-cell data network and any of the paths targeting the clinical phenotype.</p>
+    </div> -->
+
+    <label for="data" class="tooltip u-pull-left" style="position:absolute; top:46%;" title="Switch to a new dataset">Active dataset</label>
+    <div class="u-cf"></div>
+    <select class id="data" style="position:absolute; left:0%; top:52%;">
         <option value="pathways_msgbclin_pats.json">MSGB to Clinical: All MS Patients</option>
         <option value="pathways_phosclin_pats.json">Proteomics to Clinical: All MS Patients</option>
         <option value="pathways_cytoclin_pats.json">Cytomics to Clinical: All MS Patients</option>
@@ -86,36 +120,13 @@
       </select>
       <p></p>
 
-    <label for="style" class="tooltip u-pull-left" title="Switch to a new graph stylesheet">Active stylesheet</label>
-    <div class="u-cf"></div>
-    <select id="style">
-        <option value="custom.json" selected>Custom</option>
-      </select>
-    <p></p>
+    <label for="pathActive" class="tooltip u-pull-left" style="position:absolute; left:2%; top:64%;" title="Choose which pathway to show">Highlighted Pathways</label>
+    <div id="pathActive" class="u-cf" style="position:absolute; left:2%; top:74%; font-size:12px;">
+      <p></p>
+    </div>
 
-
-    <label for="layout" class="tooltip u-pull-left" title="Change layout">Active layout</label>
-    <div class="u-cf"></div>
-    <select id="layout">
-        <option value="custom" selected>Custom</option>
-      </select>
-    <i id="redo-layout" class="fa fa-refresh action-icon tooltip" title="Redo layout"></i>
-    <p></p>
-
-    <label for="algorithm" class="tooltip u-pull-left" title="Run algorithm. Try running A* a few times to see distances to different nodes">
-        Run algorithm
-      </label>
-    <div class="u-cf"></div>
-    <select id="algorithm">
-        <option value="none" selected>None</option>
-      </select>
-    <i id="redo-algorithm" class="fa fa-refresh action-icon tooltip" title="Redo algorithm visualization"></i>
   </div>
   <p></p>
-
-  <div class="footer-link">
-    <a target="_blank" href="http://js.cytoscape.org">js.cytoscape.org</a>
-  </div>
 
 </body>
 
